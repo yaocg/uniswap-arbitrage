@@ -22,6 +22,7 @@ from settings import gasPrice
 from settings import address_router_contract
 from settings import address_tx_sender
 from settings import reserveMinAmount
+from settings import dfsUsePairNum
 
 from tokens import getWhiteTokens
 from pairs import getAllPairInfo
@@ -58,7 +59,7 @@ tmr = timer()
 
 web3_ins = Web3(Web3.HTTPProvider(ethereum_http))
 def main(pairs:List[Dict])->None:
-    pairs = randSelect(pairs)
+    pairs = randSelect(pairs, dfsUsePairNum)
     logger.info(f"pairs num_use: {len(pairs)}")
 
     next(tmr)
@@ -83,6 +84,8 @@ def main(pairs:List[Dict])->None:
         # in/out
         amount_in = amountsOut[0]
         amount_out = amountsOut[-1]
+
+        logger.info(f"--- path0: {trade['path'][0]['symbol']} path-1: {trade['path'][-1]['symbol']}")
 
         #a = getAmountsOut(web3_ins=web3_ins, amount_in=amount_in, token_address_path=[d["address"] for d in trade["path"]])
         # amount out on slide point

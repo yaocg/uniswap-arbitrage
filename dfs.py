@@ -40,7 +40,10 @@ def findArb(pairs:List[Dict], tokenIn:Dict, tokenOut:Dict, maxHops:int, currentP
                 if optA <= 0:
                     continue
 
-                outA = getAmountOutByPath(tokenOut, optA, newCurrentPairs)
+                status, outA = getAmountOutByPath(tokenOut, optA, newCurrentPairs)
+                if not status:
+                    continue
+
                 profit = outA[-1] - outA[0]
                 newTrade = {
                         "route": newCurrentPairs,
@@ -54,5 +57,6 @@ def findArb(pairs:List[Dict], tokenIn:Dict, tokenOut:Dict, maxHops:int, currentP
         elif maxHops > 1 and len(pairs) > 1:
             pairs[i] = None
             bestTrades = findArb(pairs, tempOut, tokenOut, maxHops-1, newCurrentPairs, newPath, bestTrades, programStatus, count)
+            pairs[i] = pair
 
     return bestTrades

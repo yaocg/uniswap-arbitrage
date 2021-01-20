@@ -41,19 +41,23 @@ def getEaEb(tokenIn:Dict, pairs:List[Dict])->(int,int):
         Eb = int(d997*Eb*Rc/(d1000*Rb1+d997*Eb))
     return Ea, Eb
 
-def getAmountOutByPath(tokenIn:Dict, amountIn:int, pairs:List[Dict])->int:
+def getAmountOutByPath(tokenIn:Dict, amountIn:int, pairs:List[Dict])->(bool, int):
     amountOut = [amountIn] + [None for _ in pairs]
     tokenOut = tokenIn
+    status = False
     for i,pair in enumerate(pairs):
         if pair['token0']['address'] == tokenOut['address']:
             tokenOut = pair['token1']
-            amountOut[i+1] = getAmountOut(amountOut[i], pair['reserve0'], pair['reserve1'])
+            status, amountOut[i+1] = getAmountOut(amountOut[i], pair['reserve0'], pair['reserve1'])
         elif pair['token1']['address'] == tokenOut['address']:
             tokenOut = pair['token0']
-            amountOut[i+1] = getAmountOut(amountOut[i], pair['reserve1'], pair['reserve0'])
-    return amountOut
+            status, amountOut[i+1] = getAmountOut(amountOut[i], pair['reserve1'], pair['reserve0'])
+        if not status:
+            break
+    return status, amountOut
 
-def getAmountOut(amountIn:int, reserveIn:int, reserveOut:int)->int:
-    assert amountIn > 0
-    assert reserveIn > 0 and reserveOut > 0
-    return int(d997*amountIn*reserveOut/(d1000*reserveIn+d997*amountIn))
+def getAmountOut(amountIn:int, reserveIn:int, reserveOut:int)->(bool, int):
+    if amountIn <= 0 or reserveIn <=0 or reserveOut <=0:
+        return False, 0
+
+    return True, int(d997*amountIn*reserveOut/(d1000*reserveIn+d997*amountIn))

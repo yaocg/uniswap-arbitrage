@@ -94,8 +94,8 @@ class Liquidity(threading.Thread):
 
     def __disablePair(self, index:int):
         pair = self.__white_pairs_list[index]
-        t0 = int(pair["reserve0"]/pow(10, pair["token0"]["decimal"]))<self.__reserve_min_amount
-        t1 = int(pair["reserve1"]/pow(10, pair["token1"]["decimal"]))<self.__reserve_min_amount
+        t0 = pair["reserve0"]/pow(10, pair["token0"]["decimal"])<self.__reserve_min_amount
+        t1 = pair["reserve1"]/pow(10, pair["token1"]["decimal"])<self.__reserve_min_amount
         if t0 or t1:
             pair.update({"enable":False})
             return 1

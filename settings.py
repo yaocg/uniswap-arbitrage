@@ -72,9 +72,10 @@ basicTokens = {
 maxHops = 6
 startToken = basicTokens["weth"]
 minProfit = 0.01
-slidePoint = 0.05
+slidePoint = 0.01
 gasPrice = 200*10**9    # 200 Gwei
-reserveMinAmount = 10
+reserveMinAmount = 1e-20
+dfsUsePairNum = 200    # None=>all,or amount
 
 ethereum_http = "own_ethereum_node"
 
